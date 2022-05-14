@@ -80,6 +80,7 @@ Commands = {
     freezeColumn: { fn: SheetActions.freezeColumn.bind(SheetActions) },
 
     // Misc
+    repeatLastCommand: { fn: SheetActions.repeatLastCommand.bind(SheetActions) },
     toggleFullScreen: { fn: SheetActions.toggleFullScreen.bind(SheetActions) },
     openCellAsUrl: { fn: SheetActions.openCellAsUrl.bind(SheetActions), },
     reloadPage: { fn: UI.reloadPage.bind(UI) },
@@ -165,6 +166,7 @@ Commands = {
       ";,f,c": "freezeColumn",
 
       // Misc
+      ".": "repeatLastCommand", 
       ";,w,m": "toggleFullScreen", // Mnemonic for "window maximize"
       ";,w,f": "toggleFullScreen", // Mnemonic for "window full screen"
       ";,o": "openCellAsUrl",

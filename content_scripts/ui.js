@@ -29,6 +29,8 @@ UI = {
   mode: "normal",
   // Keys which were typed recently
   keyQueue: [],
+  lastCommand: null,
+  repeatCount: 1, // how many times to repeat this command
   // A map of mode -> comma-separated keys -> bool. The keys are prefixes to the user's bound keybindings.
   keyBindingPrefixes: null,
   richTextEditorId: "waffle-rich-text-editor",
@@ -230,8 +232,28 @@ UI = {
       if (commandName = modeBindings[keySequence]) {
         this.keyQueue = [];
         this.cancelEvent(e);
-        Commands.commands[commandName].fn();
+        console.log('should repeat this command', this.repeatCount)
+
+        // because I don't know how to access this from commands.js
+        if (commandName == "repeatLastCommand") {
+          Commands.commands[this.lastCommand].fn();
+        } else {
+          for(i=0; i<this.repeatCount; i++) {
+            // not sure if this will work on all commands
+            // so far so good but of course undo doesn't batch these
+            // so if you delete 3 rows, you have to undo x3 to undo it
+            Commands.commands[commandName].fn();
+            this.lastCommand = commandName;
+          }
+          this.repeatCount = 1;
+        }
       }
+    }
+
+    // probably this is where we fall through to getting numbers
+    if (! isNaN(parseInt(keyString))) {
+      this.repeatCount = parseInt(keyString); // only let 1 digit work for now
+      this.cancelEvent(e); // don't let this key through to sheets
     }
   },
 
